@@ -11,8 +11,11 @@
 
 <body>
     <header>
+        <a href="#" onclick="renderHomePage()">Home</a>
         <a href="#" onclick="renderRegisterPage()">Đăng ký</a>
         <a href="#" onclick="renderLoginPage()">Đăng nhập</a>
+        <a href="#" onclick="logout()">Đăng xuất</a>
+        <span id="acc"></span>
     </header>
 
     <div id="body">
@@ -22,6 +25,68 @@
 
     <script src="js/render-login-page.js"></script>
     <script src="js/render-register-page.js"></script>
+    <script src="js/render-home-page.js"></script>
+    <script src="js/show-user-login.js"></script>
+    <script src="/js/logout.js"></script>
+    <script>
+        // lấy về mảng account trong localStorege nếu có không có thì = mảng rỗng 
+        var listAccount = JSON.parse(localStorage.getItem("accounts")) ? JSON.parse(localStorage.getItem("accounts")) : [];
+
+        // lấy về email login nếu có thì show lên span không có thì thôi 
+        showUserLogin();
+
+    </script>
+    <script>
+        function handleRegister() {
+            // lấy dữ liệu từ input 
+            var _email = document.getElementById("email");
+            var _fullName = document.getElementById("fullName");
+            var _phone = document.getElementById("phone");
+            var _password = document.getElementById("password");
+            var formData = {
+                email: _email.value,
+                fullName: _fullName.value,
+                phone: _phone.value,
+                password: _password.value
+            }
+            // thêm 1 phần tử account vào list account 
+            listAccount.push(formData);
+            // lưu mảng listAccount vào localStorege 
+            localStorage.setItem("accounts", JSON.stringify(listAccount));
+
+        }
+
+        function handleLogin() {
+            // console.log("Mai");
+            // Bước 1 lấy dữ liệu từ form 
+            var _email = document.getElementById("email").value;
+            var _password = document.getElementById("ip_pass").value;
+            // Bước 2 : 
+            console.log("Email", _email);
+            console.log("Password", _password);
+
+            // console.log(listAccount);
+            // check tài khoản 
+            var checkAccout = false;
+            for (const item of listAccount) {
+                if (item.email == _email && item.password == _password) {
+                    checkAccout = true;
+                    alert("Đăng nhập thành công");
+
+                    // lưu thông tên người dùng đăng nhập vào localStorege 
+                    localStorage.setItem("account-login", _email);
+                    // gọi đến hàm render ra trang home
+                    renderHomePage();
+                    // goi đến hàm show ra ten đăng nhập 
+                    showUserLogin();
+                    break;
+                }
+            }
+            if (!checkAccout) {
+                alert("Sai thông tin tài khoản")
+            }
+        }
+    </script>
 </body>
 
 </html>
